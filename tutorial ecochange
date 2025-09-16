@@ -1,0 +1,148 @@
+#---- 
+#Installation
+install.packages('ecochange')
+
+library(ecochange)
+library(viridis)
+library(raster)
+library(rgdal)
+
+
+#----
+# Downloading spatial data
+#The getGADM() function provides the names of administrative units. By default, it shows level 2 administrative units in the country of Colombia but those settings can be changed through the parameters level and country
+getGADM()
+
+#Examples
+getGADM(country = "ITA", level = 1)  # Italia, Regioni
+getGADM(country = "ITA", level = 2)  # Italia, Province
+
+# List the products that can be downloaded with ecochange
+#Ti mostra tutti i dataset ambientali (ERSP) che ecochange sa scaricare, ad esempio:Global Forest Change (Hansen et al.)Global Surface Water (Pekel et al.)MODIS vegetation indices
+listGP()
+
+# Download a layer containing water occurrence for the municipality of Chimichagua
+waterocc=getrsp("Chimichagua", lyrs=c("occurrence"))
+waterocc
+
+treecover=getrsp("SantoDomingo", lyrs = c("treecover2000"))
+treecover
+
+# the object is downloaded by default to a temporary folder.
+# Users can define a different path using the argument path()
+
+
+# Let's plot the object
+treecover <- plot(raster(treecover), axes = T,
+                  main = ' Tree Cover (Santo Domingo)')
+dev.off()
+
+wateroc <- plot(raster(waterocc), axes = T,
+                main = 'Occurrence (Colombia)')
+dev.off()
+
+waterviridis <- plot(raster(waterocc), col = viridis::viridis(100), 
+                     main = 'Water occurrence (Chimichagua)')
+dev.off()
+
+#----
+#Downloading, resizing, reprojecting and integrating datasets
+#The function rsp2ebv() automates the downloading, reprojection and cropping of the dataset of interest to a given polygon. It can inherit arguments in the previous getrsp(). The function will detect whether the file was already downloaded to avoid download it again.
+wo=rsp2ebv('Chimichagua', lyrs = c('occurrence'), mc.cores = detectCores())
+
+plot(wo, main = 'Occurrence (Municipality of Chimichagua)')
+
+pdf("chimichagua_occurrence.pdf", width = 7, height = 7)
+plot(wo, main = "Occurrence (Municipality of Chimichagua)")
+dev.off()
+
+# check that the projection is different to the file that was originally downloaded
+crs(raster(waterocc[1]))
+crs(wo[[1]])
+
+#The rsp2ebv() can also be implemented to download and integrate several datasets simultaneously.
+ebv <- rsp2ebv('Chimichagua', lyrs = c('treecover2000','lossyear'), mc.cores = detectCores())
+
+plot(ebv, main = 'Forest cover and loss (Chimichagua)')
+
+pdf("forest cover and loss (Chimichagua).pdf", width = 7, height = 7)
+plot(ebv, main = 'Forest cover and loss (Chimichagua)')
+dev.off()
+
+#----
+#Deriving ecological changes
+#The echanges() function generates RasterStack representations of ecosystem change by masking values from a target ecosystem variable with corresponding change data.
+#It is designed to work with datasets previously prepared using rsp2ebv(), from which it can also inherit arguments and intermediate data structures. 
+#By default, the function interprets the first raster layer as the target variable and the last one as the change raster. If this ordering does not apply, the user must specify the correct layers through the eco and change arguments, which accept regular expressions matching layer names (for example, “tree” for treecover2000 and “loss” for lossyear). 
+#Additional arguments, such as eco_range and change_vals, control which pixel values are processed in both the target and change rasters. 
+#The result of echanges() is a RasterStack whose number of layers depends on the values given in change_vals; for instance, specifying three years of deforestation produces three raster layers representing those events.
+#let’s calculate forest cover area for the years 2005, 2010, and 2020, assuming a definition of forest as those areas with canopy cover between 95 and 100%
+forExt <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=TRUE, mc.cores = detectCores())
+plot(forExt, main = 'Changes in forest cover')
+dev.off()
+
+#It is possible to produce instead, a map with cumulative deforested areas by setting the argument get_unaffected=FALSE.
+defExt <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=TRUE, mc.cores = detectCores(),
+                   get_unaffected=FALSE)
+plot(defExt, main = 'Changes in forest loss')
+dev.off()
+
+#The function also allows to calculate, for instance, the distribution of tree cover among deforested pixels by changing the argument binary_output = FALSE.
+defExtTC <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=FALSE, mc.cores = detectCores(), get_unaffected=FALSE)
+plot(defExtTC, main = 'Changes in deforested pixels')
+
+dev.off()
+
+#----
+# Calculating biodiversity indicators and statistics
+
+#The function gaugeIndicator() calculates biodiversity indicators by processing RasterStack ecosystem-change representations from echanges(). It can also inherit arguments from rsp2ebv() and echanges() to derive the RasterStack ecosystem-change representations.
+#The argument metric provides the name of a biodiversity indicator. By default, metric = ‘area_ha’ tells the function to compute ecosystem areas (hectare).
+library(landscapemetrics)
+list_lsm()
+
+#The function output is a tibble of indicators ordered according to classes in the ecological variable. This output can be visualized using the in-package plot.Indicator().
+#Let’s calculate the cumulative forest and deforested area in the three years analyzed above
+forArea=gaugeIndicator(forExt, ncores=6)
+defArea=gaugeIndicator(defExt, ncores=6)
+forArea
+defArea
+plot(forArea, cex = 1.1, xlab = 'Year', ylab = 'Area (ha)', title = "Ecosystem extents", subtitle = 'Forest cover', fill = 'Pixel \nvalue')
+plot(defArea, cex = 1.1, xlab = 'Year', ylab = '', title = '', subtitle = 'Forest loss', fill = '')
+
+dev.off()
+
+#The function allows to calculate the area of forest loss per canopy cover classes. We adjust the color palette in the plot.Indicator method to better visualize the area covered per class
+defAreaTC=gaugeIndicator(defExtTC, ncores=6)
+defAreaTC
+plot(defAreaTC, y = viridis(6), cex = 1.1, xlab = 'Year',
+     ylab = 'Area (ha)', title = 'Forest loss',
+     subtitle = 'Tree-canopy cover values', fill = '(%)')
+
+dev.off()
+
+#You can reproduce box plots over time by setting type = ‘b’ in the very same plot method
+plot(defAreaTC, type = 'b', cex = 1.1, xlab = 'Year',
+     ylab = '',title = '', subtitle = 'Tree-canopy cover distributions', fill = 'Year')
+dev.off()
+
+#you can also calculate summary statistics for each tree cover class using the EBVstats() function:
+chgstats=EBVstats(defExtTC)
+chgstats
+
+#----
+#Sampling indicators across grids
+#The sampleIndicator() function splits each scene in a raster stack into fixed-size grids and calculates a biodiversity indicator for every grid. 
+#Its purpose is to help visualize spatial changes in biodiversity indicators. In the example, the function is used to measure ecosystem degradation through conditional entropy, which reflects shifts in pixel adjacency and canopy-cover diversity.
+#The argument side controls the grid cell size: users can set it manually, or leave it at the default, where the algorithm automatically determines an optimal grid size that ensures a numeric value is returned for each grid. The output is a RasterStack with the same number of layers as the original ecosystem-change map.
+
+# Let's first calculate forest extent by all tree cover classes for 2019
+ech <- echanges(ebv, eco = 'tree', echanges = 'loss',
+                change_vals = c(0,20), mc.cores = 2)
+plot(ech, main = 'Forest cover')
+dev.off()
+
+si <- sampleIndicator(ech, mc.cores = detectCores())
+si
+plot(si, main = 'Conditional entropy')
+dev.off()
