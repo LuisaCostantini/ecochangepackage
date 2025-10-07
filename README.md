@@ -37,21 +37,23 @@ It will also be the starting point for further analysis during my internship.
 library(ecochange)
 library(raster)
 library(viridis)
+```
 
-**##Step 2 – Download Administrative Boundaries**
+## Step 2 - Download Administrative Boundaries
 The getGADM() function provides the names of administrative units. By default, it shows level 2 administrative units in the country of Colombia but those settings can be changed through the parameters level and country
 ```{r}
 getGADM()
 ```
 
-**##Step 3 – List Available Environmental Products**
+## Step 3 – List Available Environmental Products**
+
 List the products that can be downloaded with ecochange
 It shows you all the environmental datasets (ERSP) that ecochange can download, for example: Global Forest Change (Hansen et al.), Global Surface Water (Pekel et al.), and MODIS vegetation indices.
 ```{r}
 listGP()
 ```
 
-**##Step 4 – Download a Specific Dataset**
+## Step 4 – Download a Specific Dataset**
 Download a layer containing water occurrence for the municipality of Chimichagua
 
 ```{r}
@@ -61,7 +63,8 @@ waterocc
 treecover=getrsp("SantoDomingo", lyrs = c("treecover2000"))
 treecover
 ```
-**## Step 5 - Plot the object**
+
+## Step 5 - Plot the object
 the object is downloaded by default to a temporary folder.
 Users can define a different path using the argument path()
 
