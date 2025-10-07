@@ -45,7 +45,7 @@ The getGADM() function provides the names of administrative units. By default, i
 getGADM()
 ```
 
-## Step 3 – List Available Environmental Products**
+## Step 3 – List Available Environmental Products
 
 List the products that can be downloaded with ecochange
 It shows you all the environmental datasets (ERSP) that ecochange can download, for example: Global Forest Change (Hansen et al.), Global Surface Water (Pekel et al.), and MODIS vegetation indices.
@@ -53,7 +53,7 @@ It shows you all the environmental datasets (ERSP) that ecochange can download, 
 listGP()
 ```
 
-## Step 4 – Download a Specific Dataset**
+## Step 4 – Download a Specific Dataset
 Download a layer containing water occurrence for the municipality of Chimichagua
 
 ```{r}
@@ -80,6 +80,6 @@ dev.off()
 waterviridis <- plot(raster(waterocc), col = viridis::viridis(100), 
                      main = 'Water occurrence (Chimichagua)')
 dev.off()
-```[Rplot.pdf](https://github.com/user-attachments/files/22749723/Rplot.pdf)
-[Rplot02.pdf](https://github.com/user-attachments/files/22749739/Rplot02.pdf)
+
+
 
