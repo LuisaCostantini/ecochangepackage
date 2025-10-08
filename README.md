@@ -81,7 +81,6 @@ waterviridis <- plot(raster(waterocc), col = viridis::viridis(100),
                      main = 'Water occurrence (Chimichagua)')
 dev.off()
 
-
 ![Tree Cover](C:\ecochange\ecochange/treecoversantodomingo1.png)
-
+```
 
