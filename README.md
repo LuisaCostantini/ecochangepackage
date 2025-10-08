@@ -87,5 +87,5 @@ repo/
     treecoversantodomingo1.png
 
 ![Tree Cover](images/treecoversantodomingo1.png)
-
+```
 
