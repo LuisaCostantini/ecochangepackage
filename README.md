@@ -83,3 +83,4 @@ dev.off()
 
 
 
+<img width="1161" height="628" alt="treecoversantodomingo1" src="https://github.com/user-attachments/assets/bcb5c8f9-30f3-40be-aee0-917469e31f8d" />
