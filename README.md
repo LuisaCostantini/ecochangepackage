@@ -65,7 +65,7 @@ treecover
 ```
 
 ## Step 5 - Plot the object
-the object is downloaded by default to a temporary folder.
+The object is downloaded by default to a temporary folder.
 Users can define a different path using the argument path()
 
 ```{r}
@@ -93,7 +93,19 @@ dev.off()
 <img width="1200" height="800" alt="water_occurrence_chimichagua" src="https://github.com/user-attachments/assets/ba16b242-11e1-45ad-afbf-a3bfe13b1aec" />
 
 
+## Step 6 - Downloading, resizing, reprojecting and integrating datasets
 
+The function rsp2ebv() automates the downloading, reprojection and cropping of the dataset of interest to a given polygon. It can inherit arguments in the previous getrsp(). 
+The function will detect whether the file was already downloaded to avoid download it again.
+
+```{r}
+wo=rsp2ebv('Chimichagua', lyrs = c('occurrence'), mc.cores = detectCores())
+
+plot(wo, main = 'Occurrence (Municipality of Chimichagua)')
+
+dev.off()
+```
+<img width="1156" height="683" alt="occuranceMunicipalityChimichagua" src="https://github.com/user-attachments/assets/ce46cb65-c35a-4dde-aed7-accfd7fb236d" />
 
 
 
