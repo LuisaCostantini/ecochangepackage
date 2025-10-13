@@ -31,9 +31,10 @@ It will also be the starting point for further analysis during my internship.
 
 📌 Internship started: **September 8, 2025**  
 
-## Step 1 – Load Packages
+## Step 1 – Install and load Packages
 
 ```r
+install.packages('ecochange')
 library(ecochange)
 library(raster)
 library(viridis)
@@ -72,14 +73,13 @@ Users can define a different path using the argument path()
 treecover <- plot(raster(treecover), axes = T,
                   main = ' Tree Cover (Santo Domingo)')
 dev.off()
-
 wateroc <- plot(raster(waterocc), axes = T,
                 main = 'Occurrence (Colombia)')
 dev.off()
-
-#In this step, I use the `viridis` package to apply a color palette to the water occurrence raster.  
+```
+In this step, I use the `viridis` package to apply a color palette to the water occurrence raster.  
 This improves visualization and highlights the intensity of water presence in the selected area
-
+```{r}
 waterviridis <- plot(raster(waterocc), col = viridis::viridis(100), 
                      main = 'Water occurrence (Chimichagua)')
 dev.off()
@@ -100,17 +100,17 @@ The function will detect whether the file was already downloaded to avoid downlo
 
 ```{r}
 wo=rsp2ebv('Chimichagua', lyrs = c('occurrence'), mc.cores = detectCores())
-
 plot(wo, main = 'Occurrence (Municipality of Chimichagua)')
 
 dev.off()
-
-#Check that the projection is different to the file that was originally downloaded
+```
+Check that the projection is different to the file that was originally downloaded
+```{r}
 crs(raster(waterocc[1]))
 crs(wo[[1]])
-
-#The rsp2ebv() can also be implemented to download and integrate several datasets simultaneously.
-
+```
+The rsp2ebv() can also be implemented to download and integrate several datasets simultaneously.
+```{r}
 ebv <- rsp2ebv('Chimichagua', lyrs = c('treecover2000','lossyear'), mc.cores = detectCores())
 plot(ebv, main = 'Forest cover and loss (Chimichagua)')
 
@@ -171,3 +171,6 @@ plot(defArea, cex = 1.1, xlab = 'Year', ylab = '', title = '', subtitle = 'Fores
 
 dev.off()
 ```
+<img width="1348" height="683" alt="ecosystem extents forarea" src="https://github.com/user-attachments/assets/a03481a0-08bf-492f-a965-87a4acc144d0" />
+<img width="1556" height="1139" alt="forest loss defarea" src="https://github.com/user-attachments/assets/dc8fb656-5d0b-4bba-8e99-32102be29a5f" />
+
