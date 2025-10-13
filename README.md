@@ -200,3 +200,25 @@ You can also calculate summary statistics for each tree cover class using the EB
 chgstats=EBVstats(defExtTC)
 chgstats
 ```
+## Step 9 - Sampling indicators across grids
+The sampleIndicator() function splits each scene in a raster stack into fixed-size grids and calculates a biodiversity indicator for every grid. 
+Its purpose is to help visualize spatial changes in biodiversity indicators. In the example, the function is used to measure ecosystem degradation through conditional entropy, which reflects shifts in pixel adjacency and canopy-cover diversity.
+The argument side controls the grid cell size: users can set it manually, or leave it at the default, where the algorithm automatically determines an optimal grid size that ensures a numeric value is returned for each grid. The output is a RasterStack with the same number of layers as the original ecosystem-change map.
+
+Let's first calculate forest extent by all tree cover classes for 2019
+```{r}
+ech <- echanges(ebv, eco = 'tree', echanges = 'loss',
+                change_vals = c(0,20), mc.cores = 2)
+plot(ech, main = 'Forest cover')
+dev.off()
+
+si <- sampleIndicator(ech, mc.cores = detectCores())
+si
+plot(si, main = 'Conditional entropy')
+dev.off()
+citation('ecochange')
+
+```
+<img width="1068" height="683" alt="forest cover" src="https://github.com/user-attachments/assets/199bfc6c-8aba-4846-8ab1-47a056e328cc" />
+<img width="1068" height="683" alt="conditional entropy" src="https://github.com/user-attachments/assets/5028a5b9-d222-4d4f-85c0-6a274e4ef74d" />
+
