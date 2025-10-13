@@ -105,7 +105,7 @@ plot(wo, main = 'Occurrence (Municipality of Chimichagua)')
 
 dev.off()
 
-# Check that the projection is different to the file that was originally downloaded
+#Check that the projection is different to the file that was originally downloaded
 crs(raster(waterocc[1]))
 crs(wo[[1]])
 
@@ -132,15 +132,16 @@ Let’s calculate forest cover area for the years 2005, 2010, and 2020, assuming
 forExt <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=TRUE, mc.cores = detectCores())
 plot(forExt, main = 'Changes in forest cover')
 dev.off()
-
-It is possible to produce instead, a map with cumulative deforested areas by setting the argument get_unaffected=FALSE.
+```
+It is possible to produce instead, a map with cumulative deforested areas by setting the argument get_unaffected=FALSE
+```{r}
 defExt <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=TRUE, mc.cores = detectCores(),
                    get_unaffected=FALSE)
 plot(defExt, main = 'Changes in forest loss')
 dev.off()
-
+```
 The function also allows to calculate, for instance, the distribution of tree cover among deforested pixels by changing the argument binary_output = FALSE.
-
+```{r}
 defExtTC <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=FALSE, mc.cores = detectCores(), get_unaffected=FALSE)
 plot(defExtTC, main = 'Changes in deforested pixels')
 
@@ -150,4 +151,23 @@ dev.off()
 <img width="1156" height="683" alt="change in forest cover" src="https://github.com/user-attachments/assets/ae3ffe4a-dd71-4c4f-a3ad-d8adf27f17a8" />
 <img width="1156" height="683" alt="changesindeforestedpixels" src="https://github.com/user-attachments/assets/deae0b9a-8598-4674-a510-8f17d2ef7f13" />
 
+## Step 8 - Calculating biodiversity indicators and statistics
+The function gaugeIndicator() calculates biodiversity indicators by processing RasterStack ecosystem-change representations from echanges(). It can also inherit arguments from rsp2ebv() and echanges() to derive the RasterStack ecosystem-change representations.
+The argument metric provides the name of a biodiversity indicator. By default, metric = ‘area_ha’ tells the function to compute ecosystem areas (hectare).
 
+```{r}
+library(landscapemetrics)
+list_lsm()
+```
+The function output is a tibble of indicators ordered according to classes in the ecological variable. This output can be visualized using the in-package plot.Indicator().
+Let’s calculate the cumulative forest and deforested area in the three years analyzed above.
+```{r}
+forArea=gaugeIndicator(forExt, ncores=6)
+defArea=gaugeIndicator(defExt, ncores=6)
+forArea
+defArea
+plot(forArea, cex = 1.1, xlab = 'Year', ylab = 'Area (ha)', title = "Ecosystem extents", subtitle = 'Forest cover', fill = 'Pixel \nvalue')
+plot(defArea, cex = 1.1, xlab = 'Year', ylab = '', title = '', subtitle = 'Forest loss', fill = '')
+
+dev.off()
+```
