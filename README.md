@@ -77,6 +77,9 @@ wateroc <- plot(raster(waterocc), axes = T,
                 main = 'Occurrence (Colombia)')
 dev.off()
 
+#In this step, I use the `viridis` package to apply a color palette to the water occurrence raster.  
+This improves visualization and highlights the intensity of water presence in the selected area
+
 waterviridis <- plot(raster(waterocc), col = viridis::viridis(100), 
                      main = 'Water occurrence (Chimichagua)')
 dev.off()
@@ -88,6 +91,8 @@ dev.off()
 
 
 <img width="1200" height="800" alt="water_occurrence_chimichagua" src="https://github.com/user-attachments/assets/ba16b242-11e1-45ad-afbf-a3bfe13b1aec" />
+
+
 
 
 
