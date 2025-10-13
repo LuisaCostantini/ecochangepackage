@@ -80,6 +80,7 @@ dev.off()
 waterviridis <- plot(raster(waterocc), col = viridis::viridis(100), 
                      main = 'Water occurrence (Chimichagua)')
 dev.off()
+```
 
 <img width="1161" height="628" alt="treecoversantodomingo1" src="https://github.com/user-attachments/assets/166328fb-e735-450e-b030-242e5821abb6" />
 
