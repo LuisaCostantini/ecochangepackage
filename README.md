@@ -133,6 +133,8 @@ forExt <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', ch
 plot(forExt, main = 'Changes in forest cover')
 dev.off()
 ```
+<img width="1156" height="683" alt="change in forest cover" src="https://github.com/user-attachments/assets/ae3ffe4a-dd71-4c4f-a3ad-d8adf27f17a8" />
+
 It is possible to produce instead, a map with cumulative deforested areas by setting the argument get_unaffected=FALSE
 ```{r}
 defExt <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=TRUE, mc.cores = detectCores(),
@@ -140,6 +142,8 @@ defExt <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', ch
 plot(defExt, main = 'Changes in forest loss')
 dev.off()
 ```
+<img width="1196" height="683" alt="changes in forest loss" src="https://github.com/user-attachments/assets/c1283928-04c2-439f-bd2e-b911d3651ea9" />
+
 The function also allows to calculate, for instance, the distribution of tree cover among deforested pixels by changing the argument binary_output = FALSE.
 ```{r}
 defExtTC <- echanges(ebv, eco = 'tree', eco_range=c(95,100), echanges = 'loss', change_vals = c(5,10,20), binary_output=FALSE, mc.cores = detectCores(), get_unaffected=FALSE)
@@ -147,8 +151,6 @@ plot(defExtTC, main = 'Changes in deforested pixels')
 
 dev.off()
 ```
-<img width="1156" height="683" alt="forestcoverandloss" src="https://github.com/user-attachments/assets/7c435c00-1c39-451e-a402-ed92ea1e8a75" />
-<img width="1156" height="683" alt="change in forest cover" src="https://github.com/user-attachments/assets/ae3ffe4a-dd71-4c4f-a3ad-d8adf27f17a8" />
 <img width="1156" height="683" alt="changesindeforestedpixels" src="https://github.com/user-attachments/assets/deae0b9a-8598-4674-a510-8f17d2ef7f13" />
 
 ## Step 8 - Calculating biodiversity indicators and statistics
