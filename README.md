@@ -174,3 +174,29 @@ dev.off()
 <img width="1348" height="683" alt="ecosystem extents forarea" src="https://github.com/user-attachments/assets/a03481a0-08bf-492f-a965-87a4acc144d0" />
 <img width="1556" height="1139" alt="forest loss defarea" src="https://github.com/user-attachments/assets/dc8fb656-5d0b-4bba-8e99-32102be29a5f" />
 
+The function allows to calculate the area of forest loss per canopy cover classes. We adjust the color palette in the plot.Indicator method to better visualize the area covered per class
+```{r}
+defAreaTC=gaugeIndicator(defExtTC, ncores=6)
+defAreaTC
+plot(defAreaTC, y = viridis(6), cex = 1.1, xlab = 'Year',
+     ylab = 'Area (ha)', title = 'Forest loss',
+     subtitle = 'Tree-canopy cover values', fill = '(%)')
+
+dev.off()
+```
+<img width="952" height="683" alt="Tree canopy cover values forest loss" src="https://github.com/user-attachments/assets/ffbaa2dc-99b5-4f76-93a5-e88ef5177b26" />
+
+You can reproduce box plots over time by setting type = ‘b’ in the very same plot method
+
+```{r}
+plot(defAreaTC, type = 'b', cex = 1.1, xlab = 'Year',
+     ylab = '',title = '', subtitle = 'Tree-canopy cover distributions', fill = 'Year')
+dev.off()
+```
+<img width="952" height="631" alt="tree canopy cover distributions" src="https://github.com/user-attachments/assets/3b928ee3-2fb9-46f3-968f-831d8570d607" />
+
+You can also calculate summary statistics for each tree cover class using the EBVstats() function:
+```{r}
+chgstats=EBVstats(defExtTC)
+chgstats
+```
