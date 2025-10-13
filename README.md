@@ -84,6 +84,9 @@ dev.off()
 
 <img width="1161" height="628" alt="treecoversantodomingo1" src="https://github.com/user-attachments/assets/166328fb-e735-450e-b030-242e5821abb6" />
 
+<img width="1167" height="683" alt="occuranceColombia" src="https://github.com/user-attachments/assets/8eea47e9-5121-422f-900d-f62cf319c7c8" />
+
+
 <img width="1200" height="800" alt="water_occurrence_chimichagua" src="https://github.com/user-attachments/assets/ba16b242-11e1-45ad-afbf-a3bfe13b1aec" />
 
 
